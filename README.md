@@ -58,11 +58,17 @@ own 19.1 install (2026-11-15):
 | `vendor/samsung/chagall-common` | 57 |
 | `vendor/samsung/chagalllte` | 95 |
 
-They live next to the staging root at
-`C:\Users\ADAM\los21-research\buildroot\vendor\samsung\` and are committed on
-`lineage-21.0`. Every `PRODUCT_COPY_FILES` source exists on disk and there are
-no destination overlaps between the three trees. 84 NXP VoIP calibration files
-that are absent from the tablet were sourced from the public
+They are published on branch `lineage-21.0`:
+
+| Repo |
+|---|
+| https://github.com/jmorrisson/android_vendor_samsung_universal5420-common |
+| https://github.com/jmorrisson/android_vendor_samsung_chagall-common |
+| https://github.com/jmorrisson/android_vendor_samsung_chagalllte |
+
+Every `PRODUCT_COPY_FILES` source exists on disk and there are no destination
+overlaps between the three trees. 84 NXP VoIP calibration files that are absent
+from the tablet were sourced from the public
 `exynos5420/android_vendor_samsung_chagallwifi@lineage-18.1` repo.
 
 Blob provenance: `libsec-ril.so` (NEEDED `libprotobuf-cpp-haxx.so`,
