@@ -75,3 +75,11 @@ Blob provenance: `libsec-ril.so` (NEEDED `libprotobuf-cpp-haxx.so`,
 `/vendor/bin/gpsd`), `gpsd` (`SSLv23_client_method`) and `libfloatingfeature.so`
 were pulled already patched, so `extract-files.sh`'s fixups are conditional and
 report "already fixed" when run against a 19.1 install.
+
+Porting notes
+-------------
+
+[PLAN-21.0.md](PLAN-21.0.md) is the research and port plan this tree was built
+from: verified upstream state, the exact LTE delta, partition evidence,
+build/install steps, and the risk register. It is a redacted copy — device
+serial numbers and local absolute paths are removed.
