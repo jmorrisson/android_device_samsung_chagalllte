@@ -45,3 +45,27 @@ Notes for LineageOS 21.0
   `/dev/block/bootdevice/by-name/{BOOT,SYSTEM}` (note: TWRP has no
   `/dev/block/by-name`). Format Data before the first 21.0 boot.
 * Back up `EFS` before flashing anything.
+
+Vendor trees
+------------
+
+Three companion vendor repos are required and were staged from the tablet's
+own 19.1 install (2026-11-15):
+
+| Repo | `PRODUCT_COPY_FILES` |
+|---|---|
+| `vendor/samsung/universal5420-common` | 20 |
+| `vendor/samsung/chagall-common` | 57 |
+| `vendor/samsung/chagalllte` | 95 |
+
+They live next to the staging root at
+`C:\Users\ADAM\los21-research\buildroot\vendor\samsung\` and are committed on
+`lineage-21.0`. Every `PRODUCT_COPY_FILES` source exists on disk and there are
+no destination overlaps between the three trees. 84 NXP VoIP calibration files
+that are absent from the tablet were sourced from the public
+`exynos5420/android_vendor_samsung_chagallwifi@lineage-18.1` repo.
+
+Blob provenance: `libsec-ril.so` (NEEDED `libprotobuf-cpp-haxx.so`,
+`/vendor/bin/gpsd`), `gpsd` (`SSLv23_client_method`) and `libfloatingfeature.so`
+were pulled already patched, so `extract-files.sh`'s fixups are conditional and
+report "already fixed" when run against a 19.1 install.
