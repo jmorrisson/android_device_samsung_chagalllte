@@ -1,0 +1,51 @@
+diff --git a/quickstep/src/com/android/quickstep/OverviewCommandHelper.java b/quickstep/src/com/android/quickstep/OverviewCommandHelper.java
+index b555bf7bef..1320fe9bf2 100644
+--- a/quickstep/src/com/android/quickstep/OverviewCommandHelper.java
++++ b/quickstep/src/com/android/quickstep/OverviewCommandHelper.java
+@@ -234,7 +234,8 @@ public class OverviewCommandHelper {
+                 case TYPE_HOME:
+                     ActiveGestureLog.INSTANCE.addLog(
+                             "OverviewCommandHelper.executeCommand(TYPE_HOME)");
+-                    mSystemUiProxy.onKeyEvent(KeyEvent.KEYCODE_HOME);
++                    // UL frameworks/base has no ISystemUiProxy.onKeyEvent
++                    // (LineageOS addition) - not forwarded on this port.
+                     return true;
+                 case TYPE_SHOW:
+                     // When Recents is not currently visible, the command's type is TYPE_SHOW
+diff --git a/quickstep/src/com/android/quickstep/QuickstepProcessInitializer.java b/quickstep/src/com/android/quickstep/QuickstepProcessInitializer.java
+index 61f6be287a..159f9698e5 100644
+--- a/quickstep/src/com/android/quickstep/QuickstepProcessInitializer.java
++++ b/quickstep/src/com/android/quickstep/QuickstepProcessInitializer.java
+@@ -83,8 +83,8 @@ public class QuickstepProcessInitializer extends MainProcessInitializer {
+         // Get the allowed mime types from the resources.
+         Set<String> allowedMimeTypes = Set.of(context.getResources().getStringArray(
+                 R.array.allowed_image_mime_types));
+-        ImageDecoder.setDefaultProcessListener(
+-                new LauncherProcessImageListener(maxMemoryBytes, allowedMimeTypes));
++        // UL frameworks/base has no ImageDecoder.setDefaultProcessListener
++        // (LineageOS addition) - skipped on this port.
+     }
+ 
+ }
+diff --git a/quickstep/src/com/android/quickstep/SystemUiProxy.java b/quickstep/src/com/android/quickstep/SystemUiProxy.java
+index b5454cbd21..24db2edc78 100644
+--- a/quickstep/src/com/android/quickstep/SystemUiProxy.java
++++ b/quickstep/src/com/android/quickstep/SystemUiProxy.java
+@@ -210,17 +210,6 @@ public class SystemUiProxy implements ISystemUiProxy, NavHandle {
+         }
+     }
+ 
+-    @Override
+-    public void onKeyEvent(int keycode) {
+-        if (mSystemUiProxy != null) {
+-            try {
+-                mSystemUiProxy.onKeyEvent(keycode);
+-            } catch (RemoteException e) {
+-                Log.w(TAG, "Failed call onKeyEvent", e);
+-            }
+-        }
+-    }
+-
+     @Override
+     public void onImeSwitcherPressed() {
+         if (mSystemUiProxy != null) {

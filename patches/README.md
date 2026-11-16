@@ -61,3 +61,30 @@ LineageOS's variant of the callback:
 body is empty in both variants, so behaviour is unchanged. (Patching lineage-sdk
 rather than the framework is deliberate: the two-argument form is part of
 LineageOS's user-switching machinery, which UL's framework does not have.)
+
+## 0003 - Trebuchet: drop two LineageOS-only framework APIs
+
+```bash
+cd ~/android/lineage-21.0/packages/apps/Trebuchet
+git apply ../../device/samsung/chagalllte/patches/0003-trebuchet-ul-framework-apis.patch
+```
+
+**Symptom** (javac, ~15% into the build):
+
+```
+packages/apps/Trebuchet/quickstep/src/com/android/quickstep/SystemUiProxy.java:213:
+    error: method does not override or implement a method from a supertype
+.../SystemUiProxy.java:217: error: cannot find symbol  method onKeyEvent(int) ... ISystemUiProxy
+.../QuickstepProcessInitializer.java:86: error: cannot find symbol  setDefaultProcessListener(...)
+```
+
+**Cause**: `packages/apps/Trebuchet` and `lineage-sdk` are LineageOS repos that UL does not
+fork, while **UL's `frameworks/base` fork is frozen at 2025-04-04** — about seven months behind
+the LineageOS 21.0 tip the apps are taken from. Trebuchet uses two framework APIs LineageOS added
+after that date: `ISystemUiProxy.onKeyEvent(int)` and
+`ImageDecoder.setDefaultProcessListener(...)`.
+
+**Fix**: remove the usages — the port loses "hardware-keyboard HOME" forwarding from the recents
+overview and the launcher's image-decoder memory tuning, both optional. Patching the app rather
+than pinning it to an older revision keeps the rest of the LineageOS pieces (LineageParts,
+Settings, …) consistent with `lineage-sdk` at the tip.
