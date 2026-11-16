@@ -9,8 +9,12 @@
            path="device/samsung/universal5420-common" remote="github" revision="lineage-21.0" />
 
   <!-- ===== kernel ===== -->
+  <!-- Kernel: pinned to salih's `lineage-21.0` (66e2c0e08e), NOT `lineage-21.0-new`.
+       The -new branch has a half-applied binder backport that calls
+       security_cred_getsecid(), which this 3.4 LSM layer does not define. -->
   <project name="salih4187/android_kernel_samsung_exynos5420"
-           path="kernel/samsung/exynos5420"          remote="github" revision="lineage-21.0-new" />
+           path="kernel/samsung/exynos5420"          remote="github"
+           revision="66e2c0e08e67902b54ea981ebabf120d348a2bb6" />
 
   <!-- ===== hardware (BSP stack; the device tree sets TARGET_SLSI_VARIANT := bsp) ===== -->
   <project name="LineageOS/android_hardware_samsung"
