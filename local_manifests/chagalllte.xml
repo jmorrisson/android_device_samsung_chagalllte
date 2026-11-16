@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!-- ===== device trees ===== -->
+  <project name="jmorrisson/android_device_samsung_chagalllte"
+           path="device/samsung/chagalllte"          remote="github" revision="lineage-21.0" />
+  <project name="retiredtab/android_device_samsung_chagall-common"
+           path="device/samsung/chagall-common"      remote="github" revision="lineage-21.0" />
+  <project name="retiredtab/android_device_samsung_universal5420-common"
+           path="device/samsung/universal5420-common" remote="github" revision="lineage-21.0" />
+
+  <!-- ===== kernel ===== -->
+  <project name="salih4187/android_kernel_samsung_exynos5420"
+           path="kernel/samsung/exynos5420"          remote="github" revision="lineage-21.0-new" />
+
+  <!-- ===== hardware (BSP stack; the device tree sets TARGET_SLSI_VARIANT := bsp) ===== -->
+  <project name="LineageOS/android_hardware_samsung"
+           path="hardware/samsung"                   remote="github" revision="lineage-21" />
+  <project name="LineageOS/android_hardware_samsung_slsi_exynos"
+           path="hardware/samsung_slsi/exynos"       remote="github" revision="lineage-19.1" />
+  <project name="LineageOS/android_hardware_samsung_slsi_exynos5"
+           path="hardware/samsung_slsi/exynos5"      remote="github" revision="lineage-19.1" />
+  <project name="exynos5420/android_hardware_samsung_slsi_exynos5420"
+           path="hardware/samsung_slsi/exynos5420"   remote="github" revision="lineage-18.1" />
+  <project name="LineageOS/android_hardware_samsung_slsi_openmax"
+           path="hardware/samsung_slsi/openmax"      remote="github" revision="lineage-19.1" />
+  <project name="LineageOS/android_device_samsung_slsi_sepolicy"
+           path="device/samsung_slsi/sepolicy"       remote="github" revision="lineage-21" />
+
+  <!-- ===== vendor blobs ===== -->
+  <project name="jmorrisson/android_vendor_samsung_chagalllte"
+           path="vendor/samsung/chagalllte"          remote="github" revision="lineage-21.0" />
+  <project name="jmorrisson/android_vendor_samsung_chagall-common"
+           path="vendor/samsung/chagall-common"      remote="github" revision="lineage-21.0" />
+  <project name="jmorrisson/android_vendor_samsung_universal5420-common"
+           path="vendor/samsung/universal5420-common" remote="github" revision="lineage-21.0" />
+  <!-- ===================================================================
+       Pins for repos that UL does not fork and whose AIDL/app surface must
+       match UL's frameworks/base fork (frozen 2025-04-04).
+       =================================================================== -->
+
+  <!-- IMms AIDL: LineageOS added `callingUser` after UL's fork date; this is
+       the last revision that matches UL's IMms.aidl exactly. -->
+  <remove-project name="LineageOS/android_packages_services_Mms" />
+  <project name="LineageOS/android_packages_services_Mms"
+           path="packages/services/Mms" remote="github"
+           revision="399abfb55168f086723bc3c5bf42491f85fd8a21" />
+
+</manifest>
