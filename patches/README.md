@@ -7,8 +7,9 @@ not satisfy the Android 14 build system.
 Apply them after `repo sync`:
 
 ```bash
-cd ~/android/lineage-21.0/hardware/samsung_slsi/exynos5420
-git apply device/samsung/chagalllte/patches/0001-mobicore-build-as-platform-modules.patch
+cd ~/android/lineage-21.0
+git -C hardware/samsung_slsi/exynos5420 apply \
+    device/samsung/chagalllte/patches/0001-mobicore-build-as-platform-modules.patch
 ```
 
 ## 0001 - mobicore: build as platform modules
@@ -38,8 +39,9 @@ latent install-path collision between the built module and the copied blob.
 ## 0002 - lineage-sdk: match UL's `IUserSwitchObserver` signature
 
 ```bash
-cd ~/android/lineage-21.0/lineage-sdk
-git apply ../../device/samsung/chagalllte/patches/0002-lineage-sdk-iuserswitchobserver-signature.patch
+cd ~/android/lineage-21.0
+git -C lineage-sdk apply \
+    device/samsung/chagalllte/patches/0002-lineage-sdk-iuserswitchobserver-signature.patch
 ```
 
 **Symptom** (javac, ~26% into the build):
@@ -65,8 +67,9 @@ LineageOS's user-switching machinery, which UL's framework does not have.)
 ## 0003 - Trebuchet: drop two LineageOS-only framework APIs
 
 ```bash
-cd ~/android/lineage-21.0/packages/apps/Trebuchet
-git apply ../../device/samsung/chagalllte/patches/0003-trebuchet-ul-framework-apis.patch
+cd ~/android/lineage-21.0
+git -C packages/apps/Trebuchet apply \
+    device/samsung/chagalllte/patches/0003-trebuchet-ul-framework-apis.patch
 ```
 
 **Symptom** (javac, ~15% into the build):
@@ -92,8 +95,9 @@ Settings, …) consistent with `lineage-sdk` at the tip.
 ## 0004 - IntentResolver: UL has no 4-arg `resolveActivityAsUser`
 
 ```bash
-cd ~/android/lineage-21.0/packages/modules/IntentResolver
-git apply ../../device/samsung/chagalllte/patches/0004-intentresolver-ul-resolveactivityasuser.patch
+cd ~/android/lineage-21.0
+git -C packages/modules/IntentResolver apply \
+    device/samsung/chagalllte/patches/0004-intentresolver-ul-resolveactivityasuser.patch
 ```
 
 **Symptom** (javac):
@@ -113,8 +117,9 @@ the Intent itself (`resolvedType` was only a hint).
 ## 0005 - Settings: four LineageOS-only framework APIs
 
 ```bash
-cd ~/android/lineage-21.0/packages/apps/Settings
-git apply ../../device/samsung/chagalllte/patches/0005-settings-ul-framework-apis.patch
+cd ~/android/lineage-21.0
+git -C packages/apps/Settings apply \
+    device/samsung/chagalllte/patches/0005-settings-ul-framework-apis.patch
 ```
 
 **Symptom** (javac, 4 errors): `config_biometric_protected_package_names` (framework resource),
@@ -131,3 +136,26 @@ git apply ../../device/samsung/chagalllte/patches/0005-settings-ul-framework-api
 
 (An RRO overlay cannot fix the resource case: the symbol must exist in the framework's `R` class
 at compile time.)
+
+## 0006 - ContactsProvider: UL has no SQLiteTokenizer.OPTION_CHECK_BRACKETS
+
+```bash
+cd ~/android/lineage-21.0
+git -C packages/providers/ContactsProvider apply \
+    device/samsung/chagalllte/patches/0006-contactsprovider-ul-sqlitetokenizer.patch
+```
+
+**Symptom**:
+
+```
+.../contacts/util/SelectionBuilder.java:48: error: cannot find symbol
+  symbol:   variable OPTION_CHECK_BRACKETS
+  location: class SQLiteTokenizer
+```
+
+**Cause**: `android.database.sqlite.SQLiteTokenizer` in UL's framework only defines
+`OPTION_NONE` and `OPTION_TOKEN_ONLY`; LineageOS later added `OPTION_CHECK_BRACKETS`
+(bracket-balance validation of SQL clauses).
+
+**Fix**: tokenize with `OPTION_NONE`. The clause is still tokenized; only the extra
+validation is skipped.

@@ -1,0 +1,15 @@
+diff --git a/src/com/android/providers/contacts/util/SelectionBuilder.java b/src/com/android/providers/contacts/util/SelectionBuilder.java
+index e21e2e29..f2807245 100644
+--- a/src/com/android/providers/contacts/util/SelectionBuilder.java
++++ b/src/com/android/providers/contacts/util/SelectionBuilder.java
+@@ -45,7 +45,9 @@ public class SelectionBuilder {
+      */
+     public SelectionBuilder addClause(String clause) {
+         if (!TextUtils.isEmpty(clause)) {
+-            SQLiteTokenizer.tokenize(clause, SQLiteTokenizer.OPTION_CHECK_BRACKETS, null);
++            // UL frameworks/base has no SQLiteTokenizer.OPTION_CHECK_BRACKETS
++            // (LineageOS addition) - tokenize without the bracket-balance check.
++            SQLiteTokenizer.tokenize(clause, SQLiteTokenizer.OPTION_NONE, null);
+             mWhereClauses.add(clause);
+         }
+         return this;
