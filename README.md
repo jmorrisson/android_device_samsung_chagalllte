@@ -83,3 +83,19 @@ Porting notes
 from: verified upstream state, the exact LTE delta, partition evidence,
 build/install steps, and the risk register. It is a redacted copy — device
 serial numbers and local absolute paths are removed.
+
+Build adaptations for LineageOS-UL 21.0
+---------------------------------------
+
+* **`include/telephony/` is a self-contained legacy RIL header set.**
+  `TARGET_SPECIFIC_HEADER_PATH` puts this directory first for every module, so
+  the overridden `ril.h` must carry its siblings too — `ril_cdma_sms.h`,
+  `ril_nv_items.h`, `ril_msim.h` — or modules that lack
+  `hardware/ril/include` on their own include path (e.g. the Samsung audio HAL)
+  fail with `'telephony/ril_cdma_sms.h' file not found`.
+* **`patches/`** carries the six patches applied to external repos during the
+  build (mobicore, lineage-sdk, Trebuchet, IntentResolver, Settings,
+  ContactsProvider); each file documents symptom, cause and fix.
+* **`local_manifests/chagalllte.xml`** is the build manifest: LineageOS-UL
+  21.0 base plus 13 local projects and one pin (`packages/services/Mms`, whose
+  `IMms` AIDL must match UL's framework).
