@@ -34,3 +34,30 @@ The device does not lose anything: it already ships the vendor-side copies as
 prebuilt blobs from the vendor tree (`mcDriverDaemon`, `libMcClient.so`,
 `libMcRegistry.so` in `/vendor/bin` and `/vendor/lib`). This also removes a
 latent install-path collision between the built module and the copied blob.
+
+## 0002 - lineage-sdk: match UL's `IUserSwitchObserver` signature
+
+```bash
+cd ~/android/lineage-21.0/lineage-sdk
+git apply ../../device/samsung/chagalllte/patches/0002-lineage-sdk-iuserswitchobserver-signature.patch
+```
+
+**Symptom** (javac, ~26% into the build):
+
+```
+lineage-sdk/.../UserContentObserver.java:35: error: <anonymous ...> is not abstract
+    and does not override abstract method onBeforeUserSwitching(int) in IUserSwitchObserver
+```
+
+**Cause**: `lineage-sdk` is LineageOS's repo (UL does not fork it) and implements
+LineageOS's variant of the callback:
+
+| Tree | `onBeforeUserSwitching` |
+|---|---|
+| LineageOS `frameworks/base` | `void onBeforeUserSwitching(int newUserId, IRemoteCallback reply)` |
+| LineageOS-UL `frameworks/base` (what we build) | `void onBeforeUserSwitching(int newUserId)` (AOSP 14) |
+
+**Fix**: implement the signature the framework actually declares. The override
+body is empty in both variants, so behaviour is unchanged. (Patching lineage-sdk
+rather than the framework is deliberate: the two-argument form is part of
+LineageOS's user-switching machinery, which UL's framework does not have.)

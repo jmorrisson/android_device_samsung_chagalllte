@@ -1,0 +1,14 @@
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/common/UserContentObserver.java b/lineage/lib/main/java/org/lineageos/platform/internal/common/UserContentObserver.java
+index 8b79d911..05e43ac9 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/common/UserContentObserver.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/common/UserContentObserver.java
+@@ -34,8 +34,7 @@ public abstract class UserContentObserver extends ContentObserver {
+ 
+     private IUserSwitchObserver mUserSwitchObserver = new IUserSwitchObserver.Stub() {
+         @Override
+-        public void onBeforeUserSwitching(int newUserId, IRemoteCallback reply)
+-                throws RemoteException {
++        public void onBeforeUserSwitching(int newUserId) {
+         }
+         @Override
+         public void onUserSwitching(int newUserId, IRemoteCallback reply) {
