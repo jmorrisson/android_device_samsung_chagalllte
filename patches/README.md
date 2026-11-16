@@ -88,3 +88,24 @@ after that date: `ISystemUiProxy.onKeyEvent(int)` and
 overview and the launcher's image-decoder memory tuning, both optional. Patching the app rather
 than pinning it to an older revision keeps the rest of the LineageOS pieces (LineageParts,
 Settings, …) consistent with `lineage-sdk` at the tip.
+
+## 0004 - IntentResolver: UL has no 4-arg `resolveActivityAsUser`
+
+```bash
+cd ~/android/lineage-21.0/packages/modules/IntentResolver
+git apply ../../device/samsung/chagalllte/patches/0004-intentresolver-ul-resolveactivityasuser.patch
+```
+
+**Symptom** (javac):
+
+```
+packages/modules/IntentResolver/.../IntentForwarderActivity.java:434:
+    error: no suitable method found for resolveActivityAsUser(Intent,String,int,int)
+```
+
+**Cause**: same UL-vs-LineageOS skew as 0002/0003. LineageOS's `PackageManager` carries a
+4-argument `resolveActivityAsUser(Intent, String resolvedType, int flags, int userId)`; UL's fork
+has only `(Intent, int flags, int userId)` and the `ResolveInfoFlags` variant.
+
+**Fix**: call the 3-argument overload from the callback; the framework derives the MIME type from
+the Intent itself (`resolvedType` was only a hint).
