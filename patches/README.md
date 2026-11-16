@@ -159,3 +159,25 @@ git -C packages/providers/ContactsProvider apply \
 
 **Fix**: tokenize with `OPTION_NONE`. The clause is still tokenized; only the extra
 validation is skipped.
+
+## 0007 - EXYNOS BSP HALs: A14 clang and libutils fixes
+
+```bash
+cd ~/android/lineage-21.0
+git -C hardware/samsung_slsi/exynos apply \
+    device/samsung/chagalllte/patches/0007-exynos-hals-a14-fixes.patch
+```
+
+**Symptoms** (native compile, ~58% into the build):
+
+```
+hardware/samsung_slsi/exynos/libfimg4x/FimgExynos5.cpp:56:58: error: loop will run at most
+    once (loop increment never executed) [-Werror,-Wunreachable-code-loop-increment]
+hardware/samsung_slsi/exynos/libhwc/ExynosHWC.cpp:877:26: error: 'string' is a private
+    member of 'android::String8'
+```
+
+| Site | Problem | Fix |
+|---|---|---|
+| `libfimg4x/FimgExynos5.cpp` | the loop body always exits via `goto`, so `i++` is dead code and A14's clang rejects it | drop the increment — it was never executed, behaviour is identical |
+| `libhwc/ExynosHWC.cpp`, `libhwc/ExynosHWCDebug.h` | `String8::string()` became private in A14's libutils | use the public `c_str()` (6 sites) |

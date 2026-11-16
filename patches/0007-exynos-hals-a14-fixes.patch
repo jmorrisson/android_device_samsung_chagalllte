@@ -1,0 +1,50 @@
+diff --git a/libfimg4x/FimgExynos5.cpp b/libfimg4x/FimgExynos5.cpp
+index ea03e56..79fb93a 100644
+--- a/libfimg4x/FimgExynos5.cpp
++++ b/libfimg4x/FimgExynos5.cpp
+@@ -53,7 +53,10 @@ FimgApi *FimgV4x::CreateInstance()
+ {
+     FimgApi *ptrFimg = NULL;
+ 
+-    for(int i = m_curFimgV4xIndex; i < NUMBER_FIMG_LIST; i++) {
++    // NOTE: the loop body always exits via `goto CreateInstance_End`, so the
++    // increment is never executed.  It is omitted on purpose: A14's clang
++    // rejects dead loop increments (-Werror=unreachable-code-loop-increment).
++    for(int i = m_curFimgV4xIndex; i < NUMBER_FIMG_LIST; ) {
+         if (m_ptrFimgApiList[i] == NULL)
+             m_ptrFimgApiList[i] = new FimgV4x;
+ 
+diff --git a/libhwc/ExynosHWC.cpp b/libhwc/ExynosHWC.cpp
+index 02913a4..4149862 100644
+--- a/libhwc/ExynosHWC.cpp
++++ b/libhwc/ExynosHWC.cpp
+@@ -874,7 +874,7 @@ void exynos5_dump(hwc_composer_device_1* dev, char *buff, int buff_len)
+         pdev->virtualDisplay->dumpLayerInfo(result);
+     }
+ #endif
+-    strlcpy(buff, result.string(), buff_len);
++    strlcpy(buff, result.c_str(), buff_len);
+ }
+ 
+ int exynos5_getDisplayConfigs(struct hwc_composer_device_1 *dev,
+diff --git a/libhwc/ExynosHWCDebug.h b/libhwc/ExynosHWCDebug.h
+index c927b4c..fed6e79 100644
+--- a/libhwc/ExynosHWCDebug.h
++++ b/libhwc/ExynosHWCDebug.h
+@@ -39,11 +39,11 @@ inline bool hwcCheckDebugMessages(uint32_t type)
+ #else
+ #define DISPLAY_LOGD(type, msg, ...) \
+     if (hwcCheckDebugMessages(type)) \
+-        ALOGD("[%s] " msg, mDisplayName.string(), ##__VA_ARGS__)
++        ALOGD("[%s] " msg, mDisplayName.c_str(), ##__VA_ARGS__)
+ #endif
+-#define DISPLAY_LOGV(msg, ...) ALOGV("[%s] " msg, mDisplayName.string(), ##__VA_ARGS__)
+-#define DISPLAY_LOGI(msg, ...) ALOGI("[%s] " msg, mDisplayName.string(), ##__VA_ARGS__)
+-#define DISPLAY_LOGW(msg, ...) ALOGW("[%s] " msg, mDisplayName.string(), ##__VA_ARGS__)
+-#define DISPLAY_LOGE(msg, ...) ALOGE("[%s] " msg, mDisplayName.string(), ##__VA_ARGS__)
++#define DISPLAY_LOGV(msg, ...) ALOGV("[%s] " msg, mDisplayName.c_str(), ##__VA_ARGS__)
++#define DISPLAY_LOGI(msg, ...) ALOGI("[%s] " msg, mDisplayName.c_str(), ##__VA_ARGS__)
++#define DISPLAY_LOGW(msg, ...) ALOGW("[%s] " msg, mDisplayName.c_str(), ##__VA_ARGS__)
++#define DISPLAY_LOGE(msg, ...) ALOGE("[%s] " msg, mDisplayName.c_str(), ##__VA_ARGS__)
+ 
+ #endif
