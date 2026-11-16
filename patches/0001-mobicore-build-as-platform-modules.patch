@@ -1,0 +1,28 @@
+diff --git a/mobicore/daemon/Android.mk b/mobicore/daemon/Android.mk
+index d593a27..fffc302 100644
+--- a/mobicore/daemon/Android.mk
++++ b/mobicore/daemon/Android.mk
+@@ -10,7 +10,6 @@ LOCAL_PATH := $(call my-dir)
+ # =============================================================================
+ include $(CLEAR_VARS)
+ LOCAL_MODULE := libMcClient
+-LOCAL_VENDOR_MODULE := true
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_C_INCLUDES += $(GLOBAL_INCLUDES)
+ LOCAL_SHARED_LIBRARIES += $(GLOBAL_LIBRARIES) liblog
+@@ -49,7 +48,6 @@ include $(BUILD_SHARED_LIBRARY)
+ include $(CLEAR_VARS)
+ 
+ LOCAL_MODULE := mcDriverDaemon
+-LOCAL_VENDOR_MODULE := true
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_CFLAGS += -include buildTag.h
+ LOCAL_CFLAGS += -DLOG_TAG=\"McDaemon\"
+@@ -89,7 +87,6 @@ include $(BUILD_EXECUTABLE)
+ include $(CLEAR_VARS)
+ 
+ LOCAL_MODULE := libMcRegistry
+-LOCAL_VENDOR_MODULE := true
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_CFLAGS += -DLOG_TAG=\"McRegistry\"
+ LOCAL_C_INCLUDES += $(GLOBAL_INCLUDES)
