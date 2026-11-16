@@ -109,3 +109,25 @@ has only `(Intent, int flags, int userId)` and the `ResolveInfoFlags` variant.
 
 **Fix**: call the 3-argument overload from the callback; the framework derives the MIME type from
 the Intent itself (`resolvedType` was only a hint).
+
+## 0005 - Settings: four LineageOS-only framework APIs
+
+```bash
+cd ~/android/lineage-21.0/packages/apps/Settings
+git apply ../../device/samsung/chagalllte/patches/0005-settings-ul-framework-apis.patch
+```
+
+**Symptom** (javac, 4 errors): `config_biometric_protected_package_names` (framework resource),
+`DeviceAdminInfo.loadDescriptionSafe(PackageManager)` (2 call sites) and
+`BiometricPrompt.Builder.setClassNameIfItIsConfirmDeviceCredentialActivity()`.
+
+**Fix**:
+
+| API | Replacement | Effect |
+|---|---|---|
+| `com.android.internal.R.array.config_biometric_protected_package_names` | `return false` | no package is biometric-protected (LineageOS feature) |
+| `DeviceAdminInfo.loadDescriptionSafe(pm)` | `loadDescription(pm)` | the call sites already catch `Resources.NotFoundException` |
+| `Builder.setClassNameIfItIsConfirmDeviceCredentialActivity()` | dropped | default class name is used |
+
+(An RRO overlay cannot fix the resource case: the symbol must exist in the framework's `R` class
+at compile time.)
